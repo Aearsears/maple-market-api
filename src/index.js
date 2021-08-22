@@ -10,12 +10,8 @@ app.use(cors());
 app.use(morgan("combined"));
 
 app.get("/api/test", (req, resp) => {
-  db.query("SELECT * FROM items", (err, res) => {
-    if (err) {
-      return next(err);
-    }
-    resp.send(res.rows);
-  });
+    // console.log();
+    resp.sendFile(path.join(__dirname, "/../db/mockdata.json"));
 });
 
 app.get("/api/img/:price", (req, resp) => {

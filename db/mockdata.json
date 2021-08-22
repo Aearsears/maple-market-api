@@ -1,0 +1,32 @@
+{
+    "apple":{
+        "name":"apple",
+        "price":80,
+        "imgSrc":""
+    },
+    "orange":{
+        "name":"orange",
+        "price":1,
+        "imgSrc":""
+    },
+    "banana":{
+        "name":"banana",
+        "price":43,
+        "imgSrc":""
+    },
+    "pear":{
+        "name":"pear",
+        "price":33,
+        "imgSrc":""
+    },
+    "mango":{
+        "name":"mango",
+        "price":100,
+        "imgSrc":""
+    },
+    "cherry":{
+        "name":"cherry",
+        "price":5,
+        "imgSrc":""
+    }
+}
