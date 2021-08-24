@@ -1,32 +1,38 @@
 {
-    "apple":{
-        "name":"apple",
+    "0":{
+        "name":"Fall Oversized Jacket",
         "price":80,
-        "imgSrc":""
+        "pchange":-5,
+        "imgSrc":"Cash_Fall_Oversized_Jacket.png"
     },
-    "orange":{
-        "name":"orange",
+    "1":{
+        "name":"White Bucket Hat",
         "price":1,
-        "imgSrc":""
+        "pchange":10,
+        "imgSrc":"Cash_White_Bucket_Hat.png"
     },
-    "banana":{
-        "name":"banana",
+    "2":{
+        "name":"Absolab Pirate Fedora",
         "price":43,
-        "imgSrc":""
+        "pchange":4,
+        "imgSrc":"Eqp_AbsoLab_Pirate_Fedora.png"
     },
-    "pear":{
-        "name":"pear",
+    "3":{
+        "name":"Arcane Umbra Super Ritual Fan",
         "price":33,
-        "imgSrc":""
+        "pchange":100,
+        "imgSrc":"Eqp_Arcane_Umbra_Super_Ritual_Fan.png"
     },
-    "mango":{
-        "name":"mango",
+    "4":{
+        "name":"Arcane River Droplet Stone",
         "price":100,
-        "imgSrc":""
+        "pchange":43,
+        "imgSrc":"Etc_Arcane_River_Droplet_Stone.png"
     },
-    "cherry":{
-        "name":"cherry",
+    "5":{
+        "name":"Power Elixir",
         "price":5,
-        "imgSrc":""
+        "pchange":-33,
+        "imgSrc":"Use_Power_Elixir.png"
     }
 }
