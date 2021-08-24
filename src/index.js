@@ -14,6 +14,11 @@ app.get("/api/test", (req, resp) => {
     resp.sendFile(path.join(__dirname, "/../db/mockdata.json"));
 });
 
+app.get("/api/mesomarket", (req, resp) => {
+    // console.log();
+    resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
+});
+
 app.get("/api/img/:price", (req, resp) => {
   db.query(
     "SELECT * FROM items WHERE price= " + req.params.price,

@@ -1,0 +1,14 @@
+{
+    "0":{
+        "name":"GMS",
+        "rate":"1:50 Bil"
+    },
+    "1":{
+        "name":"EMS",
+        "rate":"1:55 Bil"
+    },
+    "2":{
+        "name":"KMS",
+        "rate":"1:20 Bil"
+    }
+}
