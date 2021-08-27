@@ -1,35 +1,41 @@
 {
     "0":{
+        "id":0,
         "name":"Fall Oversized Jacket",
         "price":80,
         "pchange":-5,
         "imgSrc":"Cash_Fall_Oversized_Jacket.png"
     },
     "1":{
+        "id":1,
         "name":"White Bucket Hat",
         "price":1,
         "pchange":10,
         "imgSrc":"Cash_White_Bucket_Hat.png"
     },
     "2":{
+        "id":2,
         "name":"Absolab Pirate Fedora",
         "price":43,
         "pchange":4,
         "imgSrc":"Eqp_AbsoLab_Pirate_Fedora.png"
     },
     "3":{
+        "id":3,
         "name":"Arcane Umbra Super Ritual Fan",
         "price":33,
         "pchange":100,
         "imgSrc":"Eqp_Arcane_Umbra_Super_Ritual_Fan.png"
     },
     "4":{
+        "id":4,
         "name":"Arcane River Droplet Stone",
         "price":100,
         "pchange":43,
         "imgSrc":"Etc_Arcane_River_Droplet_Stone.png"
     },
     "5":{
+        "id":5,
         "name":"Power Elixir",
         "price":5,
         "pchange":-33,

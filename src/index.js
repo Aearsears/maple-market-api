@@ -20,9 +20,22 @@ if (process.env.DATABASE === "false") {
     resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
   });
   
-  app.get("/api/img/:path", (req, resp) => {
-    resp.sendFile(path.join(__dirname, "/../public/img/",req.params.path));
+  app.get("/api/img/:id", (req, resp) => {
+    let json = require(path.join(__dirname, "/../db/mockdata.json"));
+    // console.log(json);
+    let pth = json[req.params.id]["imgSrc"];
+    resp.sendFile(path.join(__dirname, "/../public/img/",pth));
+  });
 
+  app.get("/api/item/:id", (req, resp) => {
+    let json = require(path.join(__dirname, "/../db/mockdata.json"));
+    // console.log(json);
+    let pth = json[req.params.id];
+    resp.send(pth);
+  });
+
+  app.get("/api/item/:id/pricehist", (req, resp) => {
+    resp.sendFile(path.join(__dirname, "/../db/historprices/",req.params.id+".json"));
   });
 } 
 else {
