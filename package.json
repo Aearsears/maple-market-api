@@ -5,7 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js"
+    "dev": "set NODE_ENV=development && nodemon src/index.js",
+    "database": "set NODE_ENV=database && nodemon src/index.js",    
+    "prod":"set NODE_ENV=production && node src/index.js"
   },
   "keywords": [
     "maplestory"
