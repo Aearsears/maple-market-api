@@ -1,6 +1,9 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const path = require('path');
+const path = require("path");
+const fs = require("fs");
+const { nextTick } = require("process");
+const { resolve } = require("path");
 
 router.get("/item/:id/img", (req, resp) => {
     let json = require(path.join(__dirname, "/../db/mockdata.json"));
@@ -16,17 +19,24 @@ router.get("/item/:id", (req, resp) => {
     resp.send(pth);
 });
 
-router.get("/item/:id/pricehist", (req, resp) => {
-    resp.sendFile(
-        path.join(
-            __dirname,
-            "/../db/historprices/",
-            req.params.id + ".json"
-        ),
-        function(err){
-            resp.send({});
-        }
+router.get("/item/:id/pricehist", (req, resp, next) => {
+    let url = path.join(
+        __dirname,
+        "/../db/historprices/",
+        req.params.id + ".json"
     );
+    fs.stat(url, function (err, stat) {
+        if (err == null) {
+            // console.log('File exists');
+            resp.sendFile(url);
+        } else if (err.code === "ENOENT") {
+            // file does not exist
+            resp.send({});
+        } else {
+            // console.log('Some other error: ', err.code);
+            next(err);
+        }
+    });
 });
 
 module.exports = router;
