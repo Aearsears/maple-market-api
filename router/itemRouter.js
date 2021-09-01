@@ -2,8 +2,7 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
-const { nextTick } = require("process");
-const { resolve } = require("path");
+
 
 router.get("/item/:id/img", (req, resp) => {
     let json = require(path.join(__dirname, "/../db/mockdata.json"));

@@ -4,16 +4,22 @@ const cors = require("cors");
 const morgan = require("morgan");
 const path = require("path");
 const fs = require("fs");
+const bodyParser = require('body-parser');
 
 const app = express();
 const itemRouter = require("../router/itemRouter");
+const userRouter = require("../router/userRouter");
 app.use(cors());
 app.use(morgan("combined"));
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+
 //TODO: price suggestions active. submit a price suggestion. create user, user login
 var environment = process.env.NODE_ENV || "development";
 
 if (environment.trim() == "development") { // double equal sign is to way to compare strings, need to trim the string for extra whitespace
     app.use("/api", itemRouter);
+    app.use("/", userRouter);
     app.get("/test", (req, resp) => {
         // console.log();
         resp.sendFile(path.join(__dirname, "/../db/mockdata.json"));
