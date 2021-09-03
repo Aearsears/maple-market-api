@@ -16,10 +16,9 @@ router.get("/signup", (req, resp) => {
 
 // login and logout uses post method 
 router.post("/login", (req, resp) => {
-    let json = require(path.join(__dirname, "/../db/mockdata.json"));
-    // console.log(json);
-    let pth = json[req.params.id];
-    resp.send(pth);
+    console.log(req.body);
+    resp.status(200);
+    resp.send({ "Status code 200":"Account created!"});
 });
 
 

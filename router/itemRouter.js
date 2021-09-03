@@ -3,7 +3,6 @@ const router = express.Router();
 const path = require("path");
 const fs = require("fs");
 
-
 router.get("/item/:id/img", (req, resp) => {
     let json = require(path.join(__dirname, "/../db/mockdata.json"));
     // console.log(json);
@@ -36,6 +35,12 @@ router.get("/item/:id/pricehist", (req, resp, next) => {
             next(err);
         }
     });
+});
+
+router.post("/item/pricesuggestion", (req, resp) => {
+    console.log(req.body);
+    resp.status(200);
+    resp.send({ "Status code 200":"Price suggestion created!"});
 });
 
 module.exports = router;

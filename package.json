@@ -5,9 +5,9 @@
   "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "set NODE_ENV=development && nodemon src/index.js",
-    "database": "set NODE_ENV=database && nodemon src/index.js",
-    "prod": "set NODE_ENV=production && node src/index.js"
+    "dev": "set NODE_ENV=development && nodemon src/server.js",
+    "database": "set NODE_ENV=database && nodemon src/server.js",
+    "prod": "set NODE_ENV=production && node src/server.js"
   },
   "keywords": [
     "maplestory"
@@ -19,6 +19,7 @@
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "passport": "^0.4.1",
     "pg": "^8.7.1"
   },
   "devDependencies": {
