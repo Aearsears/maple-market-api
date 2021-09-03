@@ -1,26 +1,30 @@
 const express = require("express");
 const db = require("../db/index");
-const cors = require("cors");
-const morgan = require("morgan");
 const path = require("path");
 const fs = require("fs");
-const bodyParser = require('body-parser');
-const passport = require('passport');
+const bodyParser = require("body-parser");
+const passport = require("passport");
+const session = require("express-session");
+const PORT = process.env.PORT || 4000;
 
 const app = express();
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
-app.use(cors());
-app.use(morgan("combined"));
-app.use(bodyParser.json()) // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.json()); // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(express.static(path.join(__dirname, "public")));
 
-//TODO: price suggestions active. submit a price suggestion. create user, user login
+app.use("/api", itemRouter);
+app.use("/", userRouter);
+
 var environment = process.env.NODE_ENV || "development";
 
-if (environment.trim() == "development") { // double equal sign is to way to compare strings, need to trim the string for extra whitespace
-    app.use("/api", itemRouter);
-    app.use("/", userRouter);
+if (environment.trim() == "development") {
+    // double equal sign is to way to compare strings, need to trim the string for extra whitespace
+    const cors = require("cors");
+    const morgan = require("morgan");
+    app.use(cors());
+    app.use(morgan("combined"));
     app.get("/test", (req, resp) => {
         // console.log();
         resp.sendFile(path.join(__dirname, "/../db/mockdata.json"));
@@ -30,9 +34,22 @@ if (environment.trim() == "development") { // double equal sign is to way to com
         // console.log();
         resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
     });
-} 
-else {
-    app.get("/test", (req, resp,next) => {
+} else {
+    app.use(
+        session({
+            secret: "keyboard cat",
+            resave: false,
+            saveUninitialized: true,
+            cookie: {
+                maxAge: 1000 * 60 * 60 * 60,
+                secure: true,
+            },
+        })
+    );
+    app.use(passport.initialize());
+    app.use(passport.authenticate("session"));
+
+    app.get("/test", (req, resp, next) => {
         db.query(
             "SELECT * FROM items",
             (err, res) => {
@@ -111,6 +128,6 @@ else {
     });
 }
 
-app.listen(4000, (err) => {
+app.listen(PORT, (err) => {
     console.log(err);
 });
