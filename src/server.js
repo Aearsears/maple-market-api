@@ -50,6 +50,13 @@ if (environment.trim() == "development") {
     );
     app.use(passport.initialize());
     app.use(passport.authenticate("session"));
+    
+    // middleware to catch non existing routes
+    app.use(function(err,req,res,next){
+        console.log(err.stack);
+        res.status(404);
+        res.send("error:page does not exist");
+    })
 
     app.get("/test", (req, resp, next) => {
         db.query(
@@ -67,10 +74,7 @@ if (environment.trim() == "development") {
         );
     });
 
-    app.get("/status", (req, resp, next) => {
-        if (err) {
-            return next(err);
-        }
+    app.get("/status", (req, resp) => {
         resp.status(200);
         resp.send("API is online.");
     });
