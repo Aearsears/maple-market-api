@@ -7,7 +7,7 @@ module.exports = function () {
     passport.use(
         new Strategy(function (username, password, cb) {
             db.query(
-                "SELECT rowid as id, * FROM users WHERE username = ?",
+                "SELECT rowid as id, * FROM users WHERE username = $1",
                 [username],
                 function (err, resp) {
                     if (err) {
@@ -22,7 +22,7 @@ module.exports = function () {
                     crypto.pbkdf2(
                         password.normalize(),
                         resp.salt,
-                        1000,
+                        10000,
                         32,
                         "sha256",
                         function (err, hashedPassword) {

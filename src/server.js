@@ -35,6 +35,8 @@ if (environment.trim() == "development") {
         resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
     });
 } else {
+    require('./auth')();
+    
     app.use(
         session({
             secret: "keyboard cat",
@@ -52,11 +54,11 @@ if (environment.trim() == "development") {
     app.get("/test", (req, resp, next) => {
         db.query(
             "SELECT * FROM items",
-            (err, res) => {
+            (err, row) => {
                 if (err) {
                     return next(err);
                 }
-                resp.send(res.rows);
+                resp.send(row.rows);
             },
             (req, resp) => {
                 resp.status(404);
@@ -65,31 +67,40 @@ if (environment.trim() == "development") {
         );
     });
 
+    app.get("/status", (req, resp, next) => {
+        if (err) {
+            return next(err);
+        }
+        resp.status(200);
+        resp.send("API is online.");
+    });
+
     app.get("/item/:id/img", (req, resp) => {
         db.query(
-            "SELECT * FROM items WHERE price= " + req.params.price,
-            (err, res) => {
+            "SELECT * FROM items WHERE price= $1",
+            [req.params.price],
+            (err, row) => {
                 if (err) {
                     resp.status(404);
                     resp.send("Error!");
                 }
                 //if there is no item in database
-                else if (res.rows.length == 0) {
+                else if (row.rows.length == 0) {
                     resp.status(200);
                     resp.send("nothing!");
                 }
                 //check if no entry for img path in the database
-                else if (res.rows[0]["img_path"] == null) {
+                else if (row.rows[0]["img_path"] == null) {
                     resp.status(404);
                     resp.send("Internal Database Error!");
                 } else {
-                    console.log(res.rows);
+                    console.log(row.rows);
                     console.log(
-                        path.join(__dirname, "/../", res.rows[0]["img_path"])
+                        path.join(__dirname, "/../", row.rows[0]["img_path"])
                     );
                     //check if img file exists on filesystem
                     fs.stat(
-                        path.join(__dirname, "/../", res.rows[0]["img_path"]),
+                        path.join(__dirname, "/../", row.rows[0]["img_path"]),
                         function (err, stat) {
                             if (err == null) {
                                 // file does exist
@@ -102,7 +113,7 @@ if (environment.trim() == "development") {
                                     },
                                 };
                                 resp.sendFile(
-                                    res.rows[0]["img_path"],
+                                    row.rows[0]["img_path"],
                                     options,
                                     (err) => {
                                         if (err) {
@@ -110,7 +121,7 @@ if (environment.trim() == "development") {
                                         } else {
                                             console.log(
                                                 "Sent:",
-                                                res.rows[0]["name"]
+                                                row.rows[0]["name"]
                                             );
                                         }
                                     }

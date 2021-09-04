@@ -2,12 +2,13 @@
   "name": "maple-market-api",
   "version": "1.0.0",
   "description": "backend for maple-market",
-  "main": "src/index.js",
+  "main": "src/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "set NODE_ENV=development && nodemon src/server.js",
     "database": "set NODE_ENV=database && nodemon src/server.js",
-    "prod": "set NODE_ENV=production && node src/server.js"
+    "prod": "set NODE_ENV=production && node src/server.js",
+    "start": "node src/server.js"
   },
   "keywords": [
     "maplestory"
