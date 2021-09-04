@@ -35,6 +35,14 @@ if (environment.trim() == "development") {
         resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
     });
 } else {
+    const cors = require("cors");
+    var corsOptions={
+        origin:'https://maplemarket.herokuapp.com',
+        optionsSuccessStatus:200
+    };
+    app.use(cors(corsOptions));
+
+
     require('./auth')();
     
     app.use(
