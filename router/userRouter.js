@@ -35,7 +35,7 @@ router.post("/signup", (req, resp, next) => {
                         if (err) {
                             return next(err);
                         }
-                        resp.redirect("/");
+                        resp.redirect("https://maplemarket.herokuapp.com");
                     });
                 }
             );
@@ -62,7 +62,7 @@ router.get("/user", (req, resp, next) => {
             }
         );
     } else {
-        resp.redirect("/login");
+        resp.redirect("https://maplemarket.herokuapp.com/login");
     }
 });
 
@@ -70,12 +70,11 @@ router.get("/user", (req, resp, next) => {
 router.post(
     "/login",
     passport.authenticate("local", {
-        successReturnToOrRedirect: "/",
-        failureRedirect: "/login",
+        failureRedirect: "https://maplemarket.herokuapp.com/login",
         failureMessage:true
     }),
     (req, resp) => {
-        resp.redirect("/");
+        resp.redirect("https://maplemarket.herokuapp.com");
     }
 );
 
