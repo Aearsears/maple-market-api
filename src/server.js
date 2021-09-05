@@ -6,10 +6,17 @@ const bodyParser = require("body-parser");
 const passport = require("passport");
 const session = require("express-session");
 const PORT = process.env.PORT || 4000;
+const cors = require("cors");
 
 const app = express();
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
+var corsOptions={
+    origin:'https://maplemarket.herokuapp.com',
+    optionsSuccessStatus:200,
+    allowedHeaders:"Origin,X-Requested-With,Content-Type,Accept"
+};
+app.use(cors(corsOptions));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(express.static(path.join(__dirname, "public")));
@@ -21,7 +28,6 @@ var environment = process.env.NODE_ENV || "development";
 
 if (environment.trim() == "development") {
     // double equal sign is to way to compare strings, need to trim the string for extra whitespace
-    const cors = require("cors");
     const morgan = require("morgan");
     app.use(cors());
     app.use(morgan("combined"));
@@ -35,14 +41,6 @@ if (environment.trim() == "development") {
         resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
     });
 } else {
-    const cors = require("cors");
-    var corsOptions={
-        origin:'https://maplemarket.herokuapp.com',
-        optionsSuccessStatus:200
-    };
-    app.use(cors(corsOptions));
-
-
     require('./auth')();
     
     app.use(
