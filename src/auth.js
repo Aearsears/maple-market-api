@@ -7,7 +7,7 @@ module.exports = function () {
     passport.use(
         new Strategy(function (username, password, cb) {
             db.query(
-                "SELECT rowid as id, * FROM users WHERE username = $1",
+                "SELECT * FROM users WHERE username = $1",
                 [username],
                 function (err, resp) {
                     if (err) {
@@ -40,9 +40,9 @@ module.exports = function () {
                                 });
                             }
                             var user = {
-                                id: resp.id.toString(),
-                                username: resp.username,
-                                displayName: resp.name,
+                                id: resp.row[0].user_id.toString(),
+                                username: resp.row[0].username,
+                                displayName: resp.row[0].name,
                             };
                             return cb(null, user);
                         }

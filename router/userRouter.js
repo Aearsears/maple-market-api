@@ -20,14 +20,14 @@ router.post("/signup", (req, resp, next) => {
                 return next(err);
             }
             db.query(
-                "INSERT INTO users(username, hashed_password,salt,name) VALUES ($1, $2, $3, $4)",
+                "INSERT INTO users(username, hashed_password,salt,name) VALUES ($1, $2, $3, $4) RETURNING user_id",
                 [req.body.username, hashedPassword, salt, req.body.name],
-                (err) => {
+                (err,result) => {
                     if (err) {
                         return next(err);
                     }
                     var user = {
-                        id: this.lastID.toString(),
+                        id: result.rows[0].user_id.toString(),
                         username: req.body.username,
                         displayName: req.body.name,
                     };
@@ -46,14 +46,14 @@ router.post("/signup", (req, resp, next) => {
 router.get("/user", (req, resp, next) => {
     if (req.isAuthenticated()) {
         db.query(
-            "SELECT rowid AS id, username, name FROM users WHERE rowid = $1",
+            "SELECT user_id, username, name FROM users WHERE user_id = $1",
             [req.user.id],
             (err, row) => {
                 if (err) {
                     return next(err);
                 }
                 var user={
-                    id:row.id.toString(),
+                    id:row[0].user_id.toString(),
                     username:row.username,
                     displayname:row.name
                 };
