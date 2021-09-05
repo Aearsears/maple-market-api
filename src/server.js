@@ -12,12 +12,12 @@ const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
-var corsOptions={
-    origin:'https://maplemarket.herokuapp.com',
-    optionsSuccessStatus:200,
-    allowedHeaders:"Origin,X-Requested-With,Content-Type,Accept,Authorization"
-};
-app.use(cors(corsOptions));
+// var corsOptions={
+//     origin:'https://maplemarket.herokuapp.com',
+//     optionsSuccessStatus:200,
+//     allowedHeaders:"Origin,X-Requested-With,Content-Type,Accept,Authorization"
+// };
+app.use(cors());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
