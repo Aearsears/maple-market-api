@@ -1,13 +1,14 @@
 const passport = require("passport");
-const Strategy = require("passport-local");
+const LocalStrategy = require("passport-local").Strategy;
 const crypto = require("crypto");
 const db = require("../db/index");
 
 module.exports = function () {
     passport.use(
-        new Strategy(function (username, password, cb) {
+        new LocalStrategy(function (username, password, cb) {
+            log.debug("login process:",username);
             db.query(
-                "SELECT * FROM users WHERE username = $1",
+                "SELECT name,user_id,username FROM users WHERE username = $1",
                 [username],
                 function (err, resp) {
                     if (err) {
@@ -51,15 +52,20 @@ module.exports = function () {
             );
         })
     );
-    passport.serializeUser(function (err, cb) {
-        process.nextTick(function () {
-            cb(null, { id: user.id, username: user.name });
+    passport.serializeUser((user, done) => {
+        log.debug("serialize ", user);
+        process.nextTick( ()=> {
+            done(null, user.id);
         });
     });
 
-    passport.deserializeUser(function (err, cb) {
-        process.nextTick(function () {
-            return cb(null, user);
+    passport.deserializeUser((id, done) => {
+        log.debug("deserialize ", id);
+        process.nextTick( () =>{
+            db.query("SELECT username,name FROM users WHERE user_id = $1", [id], (err,row)=>{
+                if(err){done(new Error(`User with the id ${id} does not exist.`)); }
+                done(null,row);
+            })
         });
     });
 };

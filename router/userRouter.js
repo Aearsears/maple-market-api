@@ -74,6 +74,7 @@ router.post(
         failureMessage:true
     }),
     (req, resp) => {
+        log.debug(req.user);
         resp.redirect("https://maplemarket.herokuapp.com");
     }
 );
