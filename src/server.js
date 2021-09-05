@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 4000;
 const cors = require("cors");
 
 const app = express();
+app.use(express.static(path.join(__dirname, "public")));
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
 var corsOptions={
@@ -19,15 +20,15 @@ var corsOptions={
 app.use(cors(corsOptions));
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-app.use(express.static(path.join(__dirname, "public")));
 
-app.use("/api", itemRouter);
-app.use("/", userRouter);
+
 
 var environment = process.env.NODE_ENV || "development";
 
 if (environment.trim() == "development") {
     // double equal sign is to way to compare strings, need to trim the string for extra whitespace
+    app.use("/api", itemRouter);
+    app.use("/", userRouter);
     const morgan = require("morgan");
     app.use(cors());
     app.use(morgan("combined"));
@@ -42,7 +43,7 @@ if (environment.trim() == "development") {
     });
 } else {
     require('./auth')();
-    
+
     app.use(
         session({
             secret: "keyboard cat",
@@ -56,7 +57,8 @@ if (environment.trim() == "development") {
     );
     app.use(passport.initialize());
     app.use(passport.authenticate("session"));
-    
+    app.use("/api", itemRouter);
+    app.use("/", userRouter);
     // middleware to catch non existing routes
     app.use(function(err,req,res,next){
         console.log(err.stack);
