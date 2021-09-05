@@ -22,7 +22,7 @@ router.post("/signup", (req, resp, next) => {
             db.query(
                 "INSERT INTO users(username, hashed_password,salt,name) VALUES ($1, $2, $3, $4) RETURNING user_id",
                 [req.body.username, hashedPassword, salt, req.body.name],
-                (err,result) => {
+                (err, result) => {
                     if (err) {
                         return next(err);
                     }
@@ -50,12 +50,13 @@ router.get("/user", (req, resp, next) => {
             [req.user.id],
             (err, row) => {
                 if (err) {
+                    console.log(err);
                     return next(err);
                 }
-                var user={
-                    id:row[0].user_id.toString(),
-                    username:row.username,
-                    displayname:row.name
+                var user = {
+                    id: row[0].user_id.toString(),
+                    username: row[0].username,
+                    displayname: row[0].name,
                 };
                 resp.status(200);
                 resp.send(user);
@@ -71,12 +72,8 @@ router.post(
     "/login",
     passport.authenticate("local", {
         failureRedirect: "https://maplemarket.herokuapp.com/login",
-        failureMessage:true
-    }),
-    (req, resp) => {
-        log.debug(req.user);
-        resp.redirect("https://maplemarket.herokuapp.com");
-    }
+        successRedirect: "https://maplemarket.herokuapp.com",
+    })
 );
 
 module.exports = router;

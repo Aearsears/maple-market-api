@@ -6,15 +6,17 @@ const db = require("../db/index");
 module.exports = function () {
     passport.use(
         new LocalStrategy(function (username, password, cb) {
-            log.debug("login process:",username);
+            console.log("login process:",username);
             db.query(
                 "SELECT name,user_id,username FROM users WHERE username = $1",
                 [username],
                 function (err, resp) {
                     if (err) {
+                        console.log(err);
                         return cb(err);
                     }
                     if (!resp) {
+                        console.log("Incorrect username");
                         return cb(null, false, {
                             message: "Incorrect username or password.",
                         });
@@ -28,6 +30,7 @@ module.exports = function () {
                         "sha256",
                         function (err, hashedPassword) {
                             if (err) {
+                                console.log(err);
                                 return cb(err);
                             }
                             if (
@@ -53,16 +56,16 @@ module.exports = function () {
         })
     );
     passport.serializeUser((user, done) => {
-        log.debug("serialize ", user);
+        console.log("serialize ", user);
         process.nextTick( ()=> {
             done(null, user.id);
         });
     });
 
     passport.deserializeUser((id, done) => {
-        log.debug("deserialize ", id);
+        console.log("deserialize ", id);
         process.nextTick( () =>{
-            db.query("SELECT username,name FROM users WHERE user_id = $1", [id], (err,row)=>{
+            db.query("SELECT name,user_id,username FROM users WHERE user_id = $1", [id], (err,row)=>{
                 if(err){done(new Error(`User with the id ${id} does not exist.`)); }
                 done(null,row);
             })
