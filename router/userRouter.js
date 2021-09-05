@@ -50,6 +50,7 @@ router.get("/user", (req, resp, next) => {
             [req.user.id],
             (err, row) => {
                 if (err) {
+                    console.log("get user route error");
                     console.log(err);
                     return next(err);
                 }
