@@ -74,7 +74,14 @@ router.post(
     passport.authenticate("local", {
         failureRedirect: "https://maplemarket.herokuapp.com/login",
         successRedirect: "https://maplemarket.herokuapp.com",
-    })
+    }),(req,resp)=>{
+        if(req.body.remember){
+            req.session.cookie.maxAge=1000 * 60 * 60 * 60;
+        }
+        else{
+            req.session.cookie.expires=false;
+        }
+    }
 );
 
 module.exports = router;

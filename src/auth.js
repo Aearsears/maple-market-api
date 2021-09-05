@@ -5,7 +5,11 @@ const db = require("../db/index");
 
 module.exports = function () {
     passport.use(
-        new LocalStrategy(function (username, password, cb) {
+        new LocalStrategy({
+            email:'email',
+            password:'password'
+        },
+            function (username, password, cb) {
             console.log("login process:",username);
             db.query(
                 "SELECT name,user_id,username FROM users WHERE username = $1",
@@ -44,9 +48,9 @@ module.exports = function () {
                                 });
                             }
                             var user = {
-                                id: resp.row[0].user_id.toString(),
-                                username: resp.row[0].username,
-                                displayName: resp.row[0].name,
+                                id: resp.rows[0].user_id.toString(),
+                                username: resp.rows[0].username,
+                                displayName: resp.rows[0].name,
                             };
                             return cb(null, user);
                         }
