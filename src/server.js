@@ -15,26 +15,23 @@ app.use(express.static(path.join(__dirname, "public")));
 // app.set("trust proxy", 1);
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
-var corsOptions={
-    origin:'https://maplemarket.herokuapp.com',
-    optionsSuccessStatus:200,
-    credentials:true
+var corsOptions = {
+    origin: "https://maplemarket.herokuapp.com",
+    optionsSuccessStatus: 200,
+    credentials: true,
 };
 if (environment.trim() == "development") {
-
-    app.use(cors({origin:'http://localhost:3000',credentials:true}));
-}
-else{
+    app.use(cors({ origin: "http://localhost:3000", credentials: true }));
+} else {
     app.use(cors(corsOptions));
 }
 app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-
 if (environment.trim() == "development") {
     // double equal sign is to way to compare strings, need to trim the string for extra whitespace
-    require('./auth-passport')(passport);
+    require("./auth-passport")(passport);
 
     app.use(
         session({
@@ -45,8 +42,8 @@ if (environment.trim() == "development") {
                 maxAge: 1000 * 60 * 60 * 60,
                 secure: false,
             },
-            secure:false,
-            httpOnly:false
+            secure: false,
+            httpOnly: false,
         })
     );
     app.use(passport.initialize());
@@ -65,7 +62,7 @@ if (environment.trim() == "development") {
         resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
     });
 } else {
-    require('./auth-passport')(passport);
+    require("./auth-passport")(passport);
 
     app.use(
         session({
@@ -80,8 +77,8 @@ if (environment.trim() == "development") {
                 path: "/",
                 secure: true,
                 //domain: ".herokuapp.com", REMOVE THIS HELPED ME (I dont use a domain anymore)
-                httpOnly: true
-            }
+                httpOnly: true,
+            },
         })
     );
     app.use(passport.initialize());
@@ -89,11 +86,11 @@ if (environment.trim() == "development") {
     app.use("/api", itemRouter);
     app.use("/", userRouter);
     // middleware to catch non existing routes
-    app.use(function(err,req,res,next){
+    app.use(function (err, req, res, next) {
         console.log(err.stack);
         res.status(404);
         res.send("error:page does not exist");
-    })
+    });
 
     app.get("/test", (req, resp, next) => {
         db.query(

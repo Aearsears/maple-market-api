@@ -8,8 +8,8 @@ module.exports = function (passport) {
         "login",
         new LocalStrategy(
             {
-                usernameField : "email",
-                passwordField : "password",
+                usernameField: "email",
+                passwordField: "password",
                 passReqToCallback: true,
             },
             function (req, username, password, cb) {
@@ -48,10 +48,15 @@ module.exports = function (passport) {
                                     ) {
                                         console.log("incorrect password");
                                         return cb(null, false, {
-                                            message: "Incorrect password or username.",
+                                            message:
+                                                "Incorrect password or username.",
                                         });
                                     }
-                                    console.log("user "+req.body.username + " has logged in.");
+                                    console.log(
+                                        "user " +
+                                            req.body.username +
+                                            " has logged in."
+                                    );
                                     var user = {
                                         id: result.rows[0].user_id.toString(),
                                         username: result.rows[0].username,
@@ -76,10 +81,16 @@ module.exports = function (passport) {
     passport.deserializeUser((user, done) => {
         console.log("deserialize ", user);
         process.nextTick(() => {
-            db.query("SELECT name,user_id,username FROM users WHERE user_id = $1", [user.id], (err,results)=>{
-                if(err){return done(err); }
-                done(null,results.rows[0]);
-            })
+            db.query(
+                "SELECT name,user_id,username FROM users WHERE user_id = $1",
+                [user.id],
+                (err, results) => {
+                    if (err) {
+                        return done(err);
+                    }
+                    done(null, results.rows[0]);
+                }
+            );
             // done(null, user);
         });
     });

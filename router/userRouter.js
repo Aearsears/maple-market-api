@@ -6,7 +6,7 @@ const passport = require("passport");
 const crypto = require("crypto");
 const db = require("../db");
 const auth = require("../src/auth");
-const authcookies = require('../src/auth-cookies');
+const authcookies = require("../src/auth-cookies");
 
 //post request to create a new account
 router.post("/signup", (req, resp, next) => {
@@ -42,14 +42,14 @@ router.post("/signup", (req, resp, next) => {
                 }
             );
         }
-        );
-    });
-    
+    );
+});
+
 router.get("/user", async (req, resp, next) => {
-        try {
-            const session = await auth.getLoginSession(req);
-            console.log(session);
-            db.query(
+    try {
+        const session = await auth.getLoginSession(req);
+        console.log(session);
+        db.query(
             "SELECT user_id, username, name FROM users WHERE user_id = $1",
             [session.id],
             (err, result) => {
@@ -120,19 +120,17 @@ router.post(
     }
 );
 
-router.post(
-    "/logout",(req, resp, next) => {
-        try {
-            console.log(req.body);
-            authcookies.removeTokenCookie(resp);
+router.post("/logout", (req, resp, next) => {
+    try {
+        console.log(req.body);
+        authcookies.removeTokenCookie(resp);
 
-            resp.status(200);
-            resp.send("Logout success!");
-        } catch (error) {
-            console.log(error);
-            resp.status(401).send(error);
-        }
+        resp.status(200);
+        resp.send("Logout success!");
+    } catch (error) {
+        console.log(error);
+        resp.status(401).send(error);
     }
-);
+});
 
 module.exports = router;

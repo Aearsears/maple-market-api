@@ -38,17 +38,14 @@ router.get("/item/:id/pricehist", (req, resp, next) => {
 });
 
 router.post("/item/pricesuggestion", (req, resp) => {
-    if(req.isAuthenticated()){
+    if (req.isAuthenticated()) {
         console.log(req.body);
         resp.status(200);
-        resp.send({ "Status code 200":"Price suggestion created!"});
-
-    }
-    else{
-
+        resp.send({ "Status code 200": "Price suggestion created!" });
+    } else {
         console.log(req.body);
         resp.status(201);
-        resp.send({ "Status code 201":"you need to be logged in!"});
+        resp.send({ "Status code 201": "you need to be logged in!" });
     }
 });
 
