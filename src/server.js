@@ -12,7 +12,7 @@ const cookieParser = require("cookie-parser");
 var environment = process.env.NODE_ENV || "development";
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
-// app.set("trust proxy", 1);
+app.set("trust proxy", 1);
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
 var corsOptions = {

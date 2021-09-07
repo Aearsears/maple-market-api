@@ -11,7 +11,6 @@ function setTokenCookie(res, token) {
         secure: process.env.NODE_ENV === "production",
         path: "/",
         sameSite: "None",
-        domain: "maplemarket.herokuapp.com",
     });
     res.setHeader("Set-Cookie", kookie);
 }
