@@ -9,22 +9,29 @@ const PORT = process.env.PORT || 4000;
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 
+var environment = process.env.NODE_ENV || "development";
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
 // app.set("trust proxy", 1);
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
-// var corsOptions={
-//     origin:'https://maplemarket.herokuapp.com',
-//     optionsSuccessStatus:200,
-//     allowedHeaders:"Origin,X-Requested-With,Content-Type,Accept,Authorization"
-// };
-app.use(cors({origin:'http://localhost:3000',credentials:true}));
+var corsOptions={
+    origin:'https://maplemarket.herokuapp.com',
+    optionsSuccessStatus:200,
+    allowedHeaders:"Origin,X-Requested-With,Content-Type,Accept,Authorization",
+    credentials:true
+};
+if (environment.trim() == "development") {
+
+    app.use(cors({origin:'http://localhost:3000',credentials:true}));
+}
+else{
+    app.use(cors(corsOptions));
+}
 app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 
-var environment = process.env.NODE_ENV || "development";
 
 if (environment.trim() == "development") {
     // double equal sign is to way to compare strings, need to trim the string for extra whitespace
@@ -59,7 +66,7 @@ if (environment.trim() == "development") {
         resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
     });
 } else {
-    require('./auth-passport')();
+    require('./auth-passport')(passport);
 
     app.use(
         session({
@@ -70,6 +77,8 @@ if (environment.trim() == "development") {
                 maxAge: 1000 * 60 * 60 * 60,
                 secure: true,
             },
+            secure:false,
+            httpOnly:false
         })
     );
     app.use(passport.initialize());
