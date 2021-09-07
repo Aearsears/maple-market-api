@@ -101,7 +101,7 @@ router.get("/user", async (req, resp, next) => {
 router.post(
     "/login",
     passport.authenticate("login", {
-        failureRedirect: "http://localhost:3000/login",
+        failureRedirect: "https://maplemarket.herokuapp.com/login",
     }),
     async (req, resp, next) => {
         try {
