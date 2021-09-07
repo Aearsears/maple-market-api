@@ -18,7 +18,6 @@ const userRouter = require("../router/userRouter");
 var corsOptions={
     origin:'https://maplemarket.herokuapp.com',
     optionsSuccessStatus:200,
-    allowedHeaders:"Origin,X-Requested-With,Content-Type,Accept,Authorization",
     credentials:true
 };
 if (environment.trim() == "development") {
