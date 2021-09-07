@@ -7,33 +7,47 @@ const passport = require("passport");
 const session = require("express-session");
 const PORT = process.env.PORT || 4000;
 const cors = require("cors");
-const cookies = require('cookie-parser');
+const cookieParser = require("cookie-parser");
 
 const app = express();
 app.use(express.static(path.join(__dirname, "public")));
+// app.set("trust proxy", 1);
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
-const cookieParser = require("cookie-parser");
 // var corsOptions={
 //     origin:'https://maplemarket.herokuapp.com',
 //     optionsSuccessStatus:200,
 //     allowedHeaders:"Origin,X-Requested-With,Content-Type,Accept,Authorization"
 // };
-app.use(cors());
+app.use(cors({origin:'http://localhost:3000',credentials:true}));
 app.use(cookieParser());
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
-
-
 
 var environment = process.env.NODE_ENV || "development";
 
 if (environment.trim() == "development") {
     // double equal sign is to way to compare strings, need to trim the string for extra whitespace
+    require('./auth-passport')(passport);
+
+    app.use(
+        session({
+            secret: "keyboard cat",
+            resave: false,
+            saveUninitialized: true,
+            cookie: {
+                maxAge: 1000 * 60 * 60 * 60,
+                secure: false,
+            },
+            secure:false,
+            httpOnly:false
+        })
+    );
+    app.use(passport.initialize());
+    app.use(passport.session());
     app.use("/api", itemRouter);
     app.use("/", userRouter);
     const morgan = require("morgan");
-    app.use(cors());
     app.use(morgan("combined"));
     app.get("/test", (req, resp) => {
         // console.log();
@@ -45,7 +59,7 @@ if (environment.trim() == "development") {
         resp.sendFile(path.join(__dirname, "/../db/mesomarket.json"));
     });
 } else {
-    require('./auth')();
+    require('./auth-passport')();
 
     app.use(
         session({
