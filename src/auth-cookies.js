@@ -7,10 +7,10 @@ function setTokenCookie(res, token) {
     const kookie = cookie.serialize(TOKEN_NAME,token,{
         maxAge:MAX_AGE,
         expires:new Date(Date.now()+MAX_AGE),
-        httpOnly:true,
+        httpOnly:false,
         secure:process.env.NODE_ENV ==='production',
         path:'/',
-        sameSite:'lax'
+        sameSite:'None'
     });
     res.setHeader('Set-Cookie',kookie);
 }
