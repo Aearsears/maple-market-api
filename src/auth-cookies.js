@@ -7,7 +7,7 @@ function setTokenCookie(res, token) {
     const kookie = cookie.serialize(TOKEN_NAME,token,{
         maxAge:MAX_AGE,
         expires:new Date(Date.now()+MAX_AGE),
-        httpOnly:false,
+        httpOnly:true,
         secure:process.env.NODE_ENV ==='production',
         path:'/',
         sameSite:'lax'

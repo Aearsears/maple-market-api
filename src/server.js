@@ -76,8 +76,12 @@ if (environment.trim() == "development") {
                 maxAge: 1000 * 60 * 60 * 60,
                 secure: true,
             },
-            secure:false,
-            httpOnly:false
+            cookie: {
+                path: "/",
+                secure: true,
+                //domain: ".herokuapp.com", REMOVE THIS HELPED ME (I dont use a domain anymore)
+                httpOnly: true
+            }
         })
     );
     app.use(passport.initialize());
