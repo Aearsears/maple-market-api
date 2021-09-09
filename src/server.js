@@ -95,11 +95,11 @@ if (environment.trim() == "development") {
     app.get("/test", (req, resp, next) => {
         db.query(
             "SELECT * FROM items",
-            (err, row) => {
+            (err, result) => {
                 if (err) {
                     return next(err);
                 }
-                resp.send(row.rows);
+                resp.send(result.rows);
             },
             (req, resp) => {
                 resp.status(404);
@@ -111,69 +111,6 @@ if (environment.trim() == "development") {
     app.get("/status", (req, resp) => {
         resp.status(200);
         resp.send("API is online.");
-    });
-
-    app.get("/item/:id/img", (req, resp) => {
-        db.query(
-            "SELECT * FROM items WHERE price= $1",
-            [req.params.price],
-            (err, row) => {
-                if (err) {
-                    resp.status(404);
-                    resp.send("Error!");
-                }
-                //if there is no item in database
-                else if (row.rows.length == 0) {
-                    resp.status(200);
-                    resp.send("nothing!");
-                }
-                //check if no entry for img path in the database
-                else if (row.rows[0]["img_path"] == null) {
-                    resp.status(404);
-                    resp.send("Internal Database Error!");
-                } else {
-                    console.log(row.rows);
-                    console.log(
-                        path.join(__dirname, "/../", row.rows[0]["img_path"])
-                    );
-                    //check if img file exists on filesystem
-                    fs.stat(
-                        path.join(__dirname, "/../", row.rows[0]["img_path"]),
-                        function (err, stat) {
-                            if (err == null) {
-                                // file does exist
-                                var options = {
-                                    root: path.join(__dirname + "/../"),
-                                    dotfiles: "deny",
-                                    headers: {
-                                        "x-timestamp": Date.now(),
-                                        "x-sent": true,
-                                    },
-                                };
-                                resp.sendFile(
-                                    row.rows[0]["img_path"],
-                                    options,
-                                    (err) => {
-                                        if (err) {
-                                            console.log(err);
-                                        } else {
-                                            console.log(
-                                                "Sent:",
-                                                row.rows[0]["name"]
-                                            );
-                                        }
-                                    }
-                                );
-                            } else if (err.code === "ENOENT") {
-                                // file does not exist
-                                resp.status(200);
-                                resp.send("no img file!");
-                            }
-                        }
-                    );
-                }
-            }
-        );
     });
 }
 
