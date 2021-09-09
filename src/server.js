@@ -16,7 +16,7 @@ app.set("trust proxy", 1);
 const itemRouter = require("../router/itemRouter");
 const userRouter = require("../router/userRouter");
 var corsOptions = {
-    origin: "https://maplemarket.herokuapp.com",
+    origin: "https://wizardly-bardeen-ddc625.netlify.app",
     optionsSuccessStatus: 200,
     credentials: true,
 };
