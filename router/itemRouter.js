@@ -2,6 +2,8 @@ const express = require("express");
 const router = express.Router();
 const path = require("path");
 const fs = require("fs");
+const db = require("../db/index");
+
 
 router.get("/item/:id/img", (req, resp) => {
     db.query(
