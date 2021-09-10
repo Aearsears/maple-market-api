@@ -98,27 +98,25 @@ router.get("/user", async (req, resp, next) => {
 });
 
 // login and logout uses post method
-router.post(
-    "/login",
-    passport.authenticate("login", {
-        failureRedirect: "https://maplemarket.herokuapp.com/login",
-    }),
-    async (req, resp, next) => {
-        try {
-            console.log(req.body);
-            const user = req.user;
-            const session = { ...user };
-            console.log(session);
-            await auth.setLoginSession(resp, session);
-
-            resp.status(200);
-            resp.send("Login success!");
-        } catch (error) {
-            console.log(error);
-            resp.status(401).send(error);
+router.post("/login", (req, resp, next) => {
+    passport.authenticate("login", (err, user, info) => {
+        if (err) {
+            return next(err);
         }
-    }
-);
+        if (!user) {
+            resp.status(401);
+            resp.end(info.message);
+            return;
+        }
+        console.log(req.body);
+        const user = req.user;
+        const session = { ...user };
+        console.log(session);
+        await auth.setLoginSession(resp, session);
+        resp.status(200);
+        resp.send("Login success!");
+    })(req, resp, next);
+});
 
 router.post("/logout", (req, resp, next) => {
     try {
