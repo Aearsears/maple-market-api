@@ -1,21 +1,21 @@
 // const passport = require("passport");
-const LocalStrategy = require("passport-local").Strategy;
-const crypto = require("crypto");
-const db = require("../db/index");
+const LocalStrategy = require('passport-local').Strategy;
+const crypto = require('crypto');
+const db = require('../db/index');
 
 module.exports = function (passport) {
     passport.use(
-        "login",
+        'login',
         new LocalStrategy(
             {
-                usernameField: "email",
-                passwordField: "password",
-                passReqToCallback: true,
+                usernameField: 'email',
+                passwordField: 'password',
+                passReqToCallback: true
             },
             function (req, username, password, cb) {
-                console.log("login process:", username);
+                console.log('login process:', username);
                 db.query(
-                    "SELECT name,user_id,username,salt,hashed_password FROM users WHERE username = $1",
+                    'SELECT name,user_id,username,salt,hashed_password FROM users WHERE username = $1',
                     [username],
                     function (err, result) {
                         if (err) {
@@ -23,18 +23,19 @@ module.exports = function (passport) {
                             return cb(err);
                         }
                         if (result.rows[0] == null) {
-                            console.log("Incorrect username");
+                            console.log('Incorrect username');
                             return cb(null, false, {
-                                message: "Incorrect username or password.",
+                                message: 'Incorrect username or password.'
                             });
-                        } else {
-                            //string.normalize() before passing to pbkdf2
+                        }
+                        else {
+                            // string.normalize() before passing to pbkdf2
                             crypto.pbkdf2(
                                 password.normalize(),
                                 result.rows[0].salt,
                                 10000,
                                 32,
-                                "sha256",
+                                'sha256',
                                 function (err, hashedPassword) {
                                     if (err) {
                                         console.log(err);
@@ -46,21 +47,21 @@ module.exports = function (passport) {
                                             hashedPassword
                                         )
                                     ) {
-                                        console.log("incorrect password");
+                                        console.log('incorrect password');
                                         return cb(null, false, {
                                             message:
-                                                "Incorrect password or username.",
+                                                'Incorrect password or username.'
                                         });
                                     }
                                     console.log(
-                                        "user " +
+                                        'user ' +
                                             req.body.username +
-                                            " has logged in."
+                                            ' has logged in.'
                                     );
-                                    var user = {
+                                    const user = {
                                         id: result.rows[0].user_id.toString(),
                                         username: result.rows[0].username,
-                                        displayName: result.rows[0].name,
+                                        displayName: result.rows[0].name
                                     };
                                     return cb(null, user);
                                 }
@@ -72,17 +73,17 @@ module.exports = function (passport) {
         )
     );
     passport.serializeUser((user, done) => {
-        console.log("serialize ", user);
+        console.log('serialize ', user);
         process.nextTick(() => {
             done(null, user);
         });
     });
 
     passport.deserializeUser((user, done) => {
-        console.log("deserialize ", user);
+        console.log('deserialize ', user);
         process.nextTick(() => {
             db.query(
-                "SELECT name,user_id,username FROM users WHERE user_id = $1",
+                'SELECT name,user_id,username FROM users WHERE user_id = $1',
                 [user.id],
                 (err, results) => {
                     if (err) {

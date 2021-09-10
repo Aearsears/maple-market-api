@@ -1,79 +1,82 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const path = require("path");
-const fs = require("fs");
-const db = require("../db/index");
-const auth = require("../src/auth");
+const path = require('path');
+const fs = require('fs');
+const db = require('../db/index');
+const auth = require('../src/auth');
 
-router.get("/item/:id/img", (req, resp) => {
+router.get('/item/:id/img', (req, resp) => {
     db.query(
-        "SELECT * FROM items WHERE id= $1",
+        'SELECT * FROM items WHERE id= $1',
         [req.params.id],
         (err, result) => {
             if (err) {
                 resp.status(404);
-                resp.send("Error!");
+                resp.send('Error!');
             }
-            //if there is no item in database
             else if (result.rows.length == 0) {
+                // if there is no item in database
                 resp.status(200);
                 resp.send(`Item with id ${req.params.id} does not exist.`);
             }
-            //check if no entry for img path in the database
-            else if (result.rows[0]["imgsrc"] == null) {
+            else if (result.rows[0].imgsrc == null) {
+                // check if no entry for img path in the database
                 resp.status(404);
-                resp.send("Internal Database Error!");
-            } else {
+                resp.send('Internal Database Error!');
+            }
+            else {
                 console.log(result.rows);
                 console.log(
                     path.join(
                         __dirname,
-                        "/../",
-                        "public/img/",
-                        result.rows[0]["imgsrc"]
+                        '/../',
+                        'public/img/',
+                        result.rows[0].imgsrc
                     )
                 );
-                //check if img file exists on filesystem
+                // check if img file exists on filesystem
                 fs.stat(
                     path.join(
                         __dirname,
-                        "/../",
-                        "public/img/",
-                        result.rows[0]["imgsrc"]
+                        '/../',
+                        'public/img/',
+                        result.rows[0].imgsrc
                     ),
                     function (err, stat) {
                         if (err == null) {
                             // file does exist
-                            var options = {
+                            const options = {
                                 root: path.join(
                                     __dirname,
-                                    "/../",
-                                    "public/img/"
+                                    '/../',
+                                    'public/img/'
                                 ),
-                                dotfiles: "deny",
+                                dotfiles: 'deny',
                                 headers: {
-                                    "x-timestamp": Date.now(),
-                                    "x-sent": true,
-                                },
+                                    'x-timestamp': Date.now(),
+                                    'x-sent': true
+                                }
                             };
                             resp.sendFile(
-                                result.rows[0]["imgsrc"],
+                                result.rows[0].imgsrc,
                                 options,
                                 (err) => {
                                     if (err) {
                                         console.log(err);
-                                    } else {
+                                    }
+                                    else {
                                         console.log(
-                                            "Sent:",
-                                            result.rows[0]["name"]
+                                            'Sent:',
+                                            result.rows[0].name
                                         );
                                     }
                                 }
                             );
-                        } else if (err.code === "ENOENT") {
+                        }
+                        else if (err.code === 'ENOENT') {
                             // file does not exist
                             resp.status(200);
-                            resp.send("No img file!");
+                            resp.send('No img file!');
                         }
                     }
                 );
@@ -82,20 +85,21 @@ router.get("/item/:id/img", (req, resp) => {
     );
 });
 
-router.get("/item/:id", (req, resp) => {
+router.get('/item/:id', (req, resp) => {
     db.query(
-        "SELECT * FROM items WHERE id= $1",
+        'SELECT * FROM items WHERE id= $1',
         [req.params.id],
         (err, result) => {
             if (err) {
                 resp.status(404);
-                resp.send("Error!");
+                resp.send('Error!');
             }
-            //if there is no item in database
             else if (result.rows.length == 0) {
+                // if there is no item in database
                 resp.status(200);
                 resp.send(`Item with id ${req.params.id} does not exist.`);
-            } else {
+            }
+            else {
                 resp.status(200);
                 resp.send(result.rows);
             }
@@ -103,36 +107,39 @@ router.get("/item/:id", (req, resp) => {
     );
 });
 
-router.get("/item/:id/pricehist", (req, resp, next) => {
-    let url = path.join(
+router.get('/item/:id/pricehist', (req, resp, next) => {
+    const url = path.join(
         __dirname,
-        "/../db/historprices/",
-        req.params.id + ".json"
+        '/../db/historprices/',
+        req.params.id + '.json'
     );
     fs.stat(url, function (err, stat) {
         if (err == null) {
             // console.log('File exists');
             resp.sendFile(url);
-        } else if (err.code === "ENOENT") {
+        }
+        else if (err.code === 'ENOENT') {
             // file does not exist
             resp.send({});
-        } else {
+        }
+        else {
             // console.log('Some other error: ', err.code);
             next(err);
         }
     });
 });
 
-router.post("/item/pricesuggestion", (req, resp) => {
+router.post('/item/pricesuggestion', (req, resp) => {
     const session = auth.getLoginSession(req);
     if (session.id === undefined) {
         console.log(req.body);
         resp.status(403);
-        resp.send({ "Status code 403": "you need to be logged in!" });
-    } else {
+        resp.send({ 'Status code 403': 'you need to be logged in!' });
+    }
+    else {
         console.log(req.body);
         resp.status(200);
-        resp.send({ "Status code 200": "Price suggestion created!" });
+        resp.send({ 'Status code 200': 'Price suggestion created!' });
     }
 });
 
