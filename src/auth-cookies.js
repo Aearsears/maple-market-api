@@ -1,6 +1,6 @@
 const cookie = require("cookie");
 
-const TOKEN_NAME = "token";
+const TOKEN_NAME = "auth";
 const MAX_AGE = 60 * 60 * 8 * 1000;
 
 function setTokenCookie(res, token) {

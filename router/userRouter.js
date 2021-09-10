@@ -58,6 +58,7 @@ router.get("/user", async (req, resp, next) => {
                     console.log(err);
                     return next(err);
                 }
+                console.log(result);
                 var user = {
                     id: result.rows[0].user_id.toString(),
                     username: result.rows[0].username,
