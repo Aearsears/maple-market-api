@@ -99,7 +99,7 @@ router.get("/user", async (req, resp, next) => {
 
 // login and logout uses post method
 router.post("/login", (req, resp, next) => {
-    passport.authenticate("login", (err, user, info) => {
+    passport.authenticate("login", async (err, user, info) => {
         try {
             if (err) {
                 return next(err);
