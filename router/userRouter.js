@@ -109,7 +109,8 @@ router.post("/login", (req, resp, next) => {
             return;
         }
         console.log(req.body);
-        const session = { ...user };
+        const user_req = req.user;
+        const session = { ...user_req };
         console.log(session);
         auth.setLoginSession(resp, session);
         resp.status(200);
