@@ -3,7 +3,7 @@ const router = express.Router();
 const path = require("path");
 const fs = require("fs");
 const db = require("../db/index");
-
+const auth = require("../src/auth");
 
 router.get("/item/:id/img", (req, resp) => {
     db.query(
@@ -125,12 +125,11 @@ router.get("/item/:id/pricehist", (req, resp, next) => {
 
 router.post("/item/pricesuggestion", (req, resp) => {
     const session = auth.getLoginSession(req);
-    if(session.id === undefined){
+    if (session.id === undefined) {
         console.log(req.body);
         resp.status(403);
         resp.send({ "Status code 403": "you need to be logged in!" });
-    }
-    else{
+    } else {
         console.log(req.body);
         resp.status(200);
         resp.send({ "Status code 200": "Price suggestion created!" });
