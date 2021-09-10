@@ -100,21 +100,25 @@ router.get("/user", async (req, resp, next) => {
 // login and logout uses post method
 router.post("/login", (req, resp, next) => {
     passport.authenticate("login", (err, user, info) => {
-        if (err) {
-            return next(err);
+        try {
+            if (err) {
+                return next(err);
+            }
+            if (!user) {
+                resp.status(401);
+                resp.end(info.message);
+                return;
+            }
+            console.log(req.body);
+            const user_req = req.user;
+            const session = { ...user_req };
+            console.log(session);
+            await auth.setLoginSession(resp, session);
+            resp.status(200);
+            resp.send("Login success!");
+        } catch (error) {
+            throw new Error(error);
         }
-        if (!user) {
-            resp.status(401);
-            resp.end(info.message);
-            return;
-        }
-        console.log(req.body);
-        const user_req = req.user;
-        const session = { ...user_req };
-        console.log(session);
-        auth.setLoginSession(resp, session);
-        resp.status(200);
-        resp.send("Login success!"); 
     })(req, resp, next);
 });
 
