@@ -111,7 +111,7 @@ router.post("/login", (req, resp, next) => {
                 return;
             }
             console.log(req.body);
-            const user_req = req.user;
+            const user_req = user;
             const session = { ...user_req };
             console.log(session);
             await auth.setLoginSession(resp, session);
