@@ -109,12 +109,11 @@ router.post("/login", (req, resp, next) => {
             return;
         }
         console.log(req.body);
-        const user = req.user;
         const session = { ...user };
         console.log(session);
-        await auth.setLoginSession(resp, session);
+        auth.setLoginSession(resp, session);
         resp.status(200);
-        resp.send("Login success!");
+        resp.send("Login success!"); 
     })(req, resp, next);
 });
 
