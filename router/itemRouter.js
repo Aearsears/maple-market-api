@@ -143,4 +143,9 @@ router.post('/item/pricesuggestion', (req, resp) => {
     }
 });
 
+router.get('/item/:id/pricesuggestion', (req, resp) => {
+    const json = require(path.join(__dirname, '/../db/itempricesuggestions/', req.params.id, '.json'));
+    resp.send(json);
+});
+
 module.exports = router;

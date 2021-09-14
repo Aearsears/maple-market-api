@@ -1,7 +1,6 @@
 const express = require('express');
 const db = require('../db/index');
 const path = require('path');
-const fs = require('fs');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
