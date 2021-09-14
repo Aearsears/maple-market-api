@@ -1,10 +1,12 @@
 [
   {
-    "Date": "8/26/2020",
-    "Suggested Price": 125.713928,
-    "User":"abc",
-    "imgs":"",
-    "comments":"",
-    "votes":""
+    "itemId":0,
+    "submittedOn": "8/26/2020",
+    "suggested_price": 125.713928,
+    "username":"wackywizard3",
+    "imgs":{},
+    "comments":[""],
+    "upVotes":0,
+    "downvotes":0
   }
 ]

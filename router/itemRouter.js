@@ -1,33 +1,33 @@
-const express = require("express");
+const express = require('express');
 const router = express.Router();
-const path = require("path");
-const fs = require("fs");
+const path = require('path');
+const fs = require('fs');
 
-router.get("/item/:id/img", (req, resp) => {
-    let json = require(path.join(__dirname, "/../db/mockdata.json"));
+router.get('/item/:id/img', (req, resp) => {
+    let json = require(path.join(__dirname, '/../db/mockdata.json'));
     // console.log(json);
-    let pth = json[req.params.id]["imgSrc"];
-    resp.sendFile(path.join(__dirname, "/../public/img/", pth));
+    let pth = json[req.params.id]['imgSrc'];
+    resp.sendFile(path.join(__dirname, '/../public/img/', pth));
 });
 
-router.get("/item/:id", (req, resp) => {
-    let json = require(path.join(__dirname, "/../db/mockdata.json"));
+router.get('/item/:id', (req, resp) => {
+    let json = require(path.join(__dirname, '/../db/mockdata.json'));
     // console.log(json);
     let pth = json[req.params.id];
     resp.send(pth);
 });
 
-router.get("/item/:id/pricehist", (req, resp, next) => {
+router.get('/item/:id/pricehist', (req, resp, next) => {
     let url = path.join(
         __dirname,
-        "/../db/historprices/",
-        req.params.id + ".json"
+        '/../db/historprices/',
+        req.params.id + '.json'
     );
     fs.stat(url, function (err, stat) {
         if (err == null) {
             // console.log('File exists');
             resp.sendFile(url);
-        } else if (err.code === "ENOENT") {
+        } else if (err.code === 'ENOENT') {
             // file does not exist
             resp.send({});
         } else {
@@ -37,19 +37,36 @@ router.get("/item/:id/pricehist", (req, resp, next) => {
     });
 });
 
-router.post("/item/pricesuggestion", (req, resp) => {
-    if(req.isAuthenticated()){
+router.post('/item/pricesuggestion', (req, resp) => {
+    if (req.isAuthenticated()) {
         console.log(req.body);
         resp.status(200);
-        resp.send({ "Status code 200":"Price suggestion created!"});
-
-    }
-    else{
-
+        resp.send({ 'Status code 200': 'Price suggestion created!' });
+    } else {
         console.log(req.body);
         resp.status(201);
-        resp.send({ "Status code 201":"you need to be logged in!"});
+        resp.send({ 'Status code 201': 'you need to be logged in!' });
     }
+});
+
+router.get('/item/:id/pricesuggestion', (req, resp) => {
+    let url = path.join(
+        __dirname,
+        '/../db/itempricesuggestions/',
+        req.params.id + '.json'
+    );
+    fs.stat(url, function (err, stat) {
+        if (err == null) {
+            // console.log('File exists');
+            resp.sendFile(url);
+        } else if (err.code === 'ENOENT') {
+            // file does not exist
+            resp.send({});
+        } else {
+            // console.log('Some other error: ', err.code);
+            next(err);
+        }
+    });
 });
 
 module.exports = router;
