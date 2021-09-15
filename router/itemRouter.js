@@ -143,9 +143,26 @@ router.post('/item/pricesuggestion', (req, resp) => {
     }
 });
 
-router.get('/item/:id/pricesuggestion', (req, resp) => {
-    const json = require(path.join(__dirname, '/../db/itempricesuggestions/' + req.params.id + '.json'));
-    resp.send(json);
+router.get('/item/:id/pricesuggestion', (req, resp, next) => {
+    const url = path.join(
+        __dirname,
+        '/../db/itempricesuggestions/',
+        req.params.id + '.json'
+    );
+    fs.stat(url, function (err, stat) {
+        if (err == null) {
+            // console.log('File exists');
+            resp.sendFile(url);
+        }
+        else if (err.code === 'ENOENT') {
+            // file does not exist
+            resp.send({});
+        }
+        else {
+            // console.log('Some other error: ', err.code);
+            next(err);
+        }
+    });
 });
 
 module.exports = router;
