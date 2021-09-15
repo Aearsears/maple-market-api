@@ -3,7 +3,6 @@ const router = express.Router();
 const path = require('path');
 const fs = require('fs');
 const db = require('../db/index');
-const auth = require('../src/auth');
 
 router.get('/item/:id/img', (req, resp) => {
     db.query(
@@ -13,15 +12,18 @@ router.get('/item/:id/img', (req, resp) => {
             if (err) {
                 resp.status(404);
                 resp.send('Error!');
-            } else if (result.rows.length == 0) {
+            }
+            else if (result.rows.length == 0) {
                 // if there is no item in database
                 resp.status(200);
                 resp.send(`Item with id ${req.params.id} does not exist.`);
-            } else if (result.rows[0].imgsrc == null) {
+            }
+            else if (result.rows[0].imgsrc == null) {
                 // check if no entry for img path in the database
                 resp.status(404);
                 resp.send('Internal Database Error!');
-            } else {
+            }
+            else {
                 console.log(result.rows);
                 console.log(
                     path.join(
@@ -51,8 +53,8 @@ router.get('/item/:id/img', (req, resp) => {
                                 dotfiles: 'deny',
                                 headers: {
                                     'x-timestamp': Date.now(),
-                                    'x-sent': true,
-                                },
+                                    'x-sent': true
+                                }
                             };
                             resp.sendFile(
                                 result.rows[0].imgsrc,
@@ -60,7 +62,8 @@ router.get('/item/:id/img', (req, resp) => {
                                 (err) => {
                                     if (err) {
                                         console.log(err);
-                                    } else {
+                                    }
+                                    else {
                                         console.log(
                                             'Sent:',
                                             result.rows[0].name
@@ -68,7 +71,8 @@ router.get('/item/:id/img', (req, resp) => {
                                     }
                                 }
                             );
-                        } else if (err.code === 'ENOENT') {
+                        }
+                        else if (err.code === 'ENOENT') {
                             // file does not exist
                             resp.status(200);
                             resp.send('No img file!');
@@ -88,11 +92,13 @@ router.get('/item/:id', (req, resp) => {
             if (err) {
                 resp.status(404);
                 resp.send('Error!');
-            } else if (result.rows.length == 0) {
+            }
+            else if (result.rows.length == 0) {
                 // if there is no item in database
                 resp.status(200);
                 resp.send(`Item with id ${req.params.id} does not exist.`);
-            } else {
+            }
+            else {
                 resp.status(200);
                 resp.send(result.rows);
             }
@@ -110,10 +116,12 @@ router.get('/item/:id/pricehist', (req, resp, next) => {
         if (err == null) {
             // console.log('File exists');
             resp.sendFile(url);
-        } else if (err.code === 'ENOENT') {
+        }
+        else if (err.code === 'ENOENT') {
             // file does not exist
             resp.send({});
-        } else {
+        }
+        else {
             // console.log('Some other error: ', err.code);
             next(err);
         }
@@ -137,10 +145,12 @@ router.get('/item/:id/pricesuggestion', (req, resp, next) => {
         if (err == null) {
             // console.log('File exists');
             resp.sendFile(url);
-        } else if (err.code === 'ENOENT') {
+        }
+        else if (err.code === 'ENOENT') {
             // file does not exist
             resp.send({});
-        } else {
+        }
+        else {
             // console.log('Some other error: ', err.code);
             next(err);
         }
