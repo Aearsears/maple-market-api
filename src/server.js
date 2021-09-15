@@ -15,7 +15,7 @@ app.set('trust proxy', 1);
 const itemRouter = require('../router/itemRouter');
 const userRouter = require('../router/userRouter');
 const corsOptions = {
-    origin: 'https://wizardly-bardeen-ddc625.netlify.app',
+    origin: ['https://wizardly-bardeen-ddc625.netlify.app', 'http://localhost:3000'],
     optionsSuccessStatus: 200,
     credentials: true
 };
