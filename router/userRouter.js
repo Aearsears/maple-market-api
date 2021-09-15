@@ -105,6 +105,7 @@ router.post('/login', (req, resp, next) => {
                 return next(err);
             }
             if (!user) {
+                req.flash('error');
                 resp.status(401);
                 resp.end(info.message);
                 return;
