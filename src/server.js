@@ -7,7 +7,6 @@ const session = require('express-session');
 const PORT = process.env.PORT || 4000;
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const flash = require('connect-flash');
 
 const environment = process.env.NODE_ENV || 'development';
 const app = express();
@@ -42,7 +41,6 @@ if (environment.trim() == 'development') {
             httpOnly: false
         })
     );
-    app.use(flash());
     app.use(passport.initialize());
     app.use(passport.session());
     app.use('/api', itemRouter);
@@ -73,7 +71,6 @@ else {
             }
         })
     );
-    app.use(flash());
     app.use(passport.initialize());
     app.use(passport.session());
     app.use('/api', itemRouter);

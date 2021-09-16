@@ -5,6 +5,7 @@ const crypto = require('crypto');
 const db = require('../db');
 const auth = require('../src/auth');
 const authcookies = require('../src/auth-cookies');
+const { doesNotMatch } = require('assert');
 
 // post request to create a new account
 router.post('/signup', (req, resp, next) => {
@@ -24,19 +25,12 @@ router.post('/signup', (req, resp, next) => {
                 [req.body.username, hashedPassword, salt, req.body.name],
                 (err, result) => {
                     if (err) {
-                        return next(err);
+                        console.log(err);
+                        resp.status(401);
+                        resp.send(err.message);
                     }
-                    const user = {
-                        id: result.rows[0].user_id.toString(),
-                        username: req.body.username,
-                        displayName: req.body.name
-                    };
-                    req.login(user, (err) => {
-                        if (err) {
-                            return next(err);
-                        }
-                        resp.redirect('https://maplemarket.herokuapp.com');
-                    });
+                    resp.status(200);
+                    resp.send('User created!');
                 }
             );
         }
@@ -105,7 +99,6 @@ router.post('/login', (req, resp, next) => {
                 return next(err);
             }
             if (!user) {
-                req.flash('info');
                 resp.status(401);
                 resp.end(info.message);
                 return;
