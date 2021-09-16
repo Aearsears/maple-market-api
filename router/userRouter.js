@@ -27,10 +27,12 @@ router.post('/signup', (req, resp, next) => {
                     if (err) {
                         console.log(err);
                         resp.status(401);
-                        resp.send(err.message);
+                        resp.send(err.detail);
                     }
-                    resp.status(200);
-                    resp.send('User created!');
+                    else {
+                        resp.status(200);
+                        resp.send('User created!');
+                    }
                 }
             );
         }
