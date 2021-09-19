@@ -13,11 +13,6 @@ router.get('/item/:id/img', (req, resp) => {
                 resp.status(404);
                 resp.send('Error!');
             }
-            else if (result.rows.length == 0) {
-                // if there is no item in database
-                resp.status(200);
-                resp.send(`Item with id ${req.params.id} does not exist.`);
-            }
             else if (result.rows[0].imgsrc == null) {
                 // check if no entry for img path in the database
                 resp.status(404);
@@ -93,11 +88,6 @@ router.get('/item/:id', (req, resp) => {
                 resp.status(404);
                 resp.send('Error!');
             }
-            else if (result.rows.length == 0) {
-                // if there is no item in database
-                resp.status(200);
-                resp.send(`Item with id ${req.params.id} does not exist.`);
-            }
             else {
                 resp.status(200);
                 resp.send(result.rows);
@@ -161,11 +151,6 @@ router.get('/item/:id/pricesuggestion', (req, resp, next) => {
             if (err) {
                 resp.status(404);
                 resp.send('Error!');
-            }
-            else if (result.rows.length == 0) {
-                // if there is no item in database
-                resp.status(200);
-                resp.send(`Item with id ${req.params.id} does not have any price suggestions.`);
             }
             else {
                 resp.status(200);
