@@ -1,9 +1,12 @@
 [
   {
+    "id":1,
     "itemId":1,
     "submittedOn": "8/26/2020",
+    "updatedOn":"",
     "suggested_price": 125.713928,
-    "username":"wackywizard3",
+    "userId":1,
+    "user":"wackywizard3",
     "imgs":{},
     "comments":[""],
     "upVotes":0,

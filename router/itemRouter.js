@@ -131,28 +131,64 @@ router.get('/item/:id/pricehist', (req, resp, next) => {
 router.post('/item/pricesuggestion', (req, resp) => {
     // the check for the user having logged in is done on the nextjs by calling getServerSide props. so the user wil already be logged in to access this page and make a price suggestion
     console.log(req.body);
-    resp.status(200);
-    resp.send({ 'Status code 200': 'Price suggestion created!' });
+    db.query(
+        'INSERT INTO pricesugg(itemid, submittedon,suggested_price,userid,user) VALUES ($1, $2, $3, $4,(SELECT name FROM users WHERE user_id = $4)) ',
+        [
+            req.body.itemId,
+            req.body.submittedOn,
+            req.body.suggPrice,
+            req.body.user_id
+        ],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                resp.status(401);
+                resp.send(err.detail);
+            }
+            else {
+                resp.status(200);
+                resp.send('Price suggestion created!');
+            }
+        }
+    );
 });
 
 router.get('/item/:id/pricesuggestion', (req, resp, next) => {
-    const url = path.join(
-        __dirname,
-        '/../db/itempricesuggestions/',
-        req.params.id + '.json'
-    );
-    fs.stat(url, function (err, stat) {
-        if (err == null) {
-            // console.log('File exists');
-            resp.sendFile(url);
+    db.query(
+        'SELECT * FROM pricesugg WHERE itemid= $1',
+        [req.params.id],
+        (err, result) => {
+            if (err) {
+                resp.status(404);
+                resp.send('Error!');
+            }
+            else if (result.rows.length == 0) {
+                // if there is no item in database
+                resp.status(200);
+                resp.send(`Item with id ${req.params.id} does not have any price suggestions.`);
+            }
+            else {
+                resp.status(200);
+                resp.send(result.rows);
+            }
         }
-        else if (err.code === 'ENOENT') {
-            // file does not exist
-            resp.send({});
+    );
+});
+
+router.get('/mesomarket', (req, resp) => {
+    db.query('SELECT * FROM mesomarket', (err, result) => {
+        if (err) {
+            resp.status(404);
+            resp.send('Error!');
+        }
+        else if (result.rows.length == 0) {
+            // if there is no item in database
+            resp.status(200);
+            resp.send('No data!');
         }
         else {
-            // console.log('Some other error: ', err.code);
-            next(err);
+            resp.status(200);
+            resp.send(result.rows);
         }
     });
 });

@@ -5,7 +5,6 @@ const crypto = require('crypto');
 const db = require('../db');
 const auth = require('../src/auth');
 const authcookies = require('../src/auth-cookies');
-const { doesNotMatch } = require('assert');
 
 // post request to create a new account
 router.post('/signup', (req, resp, next) => {

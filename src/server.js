@@ -30,7 +30,7 @@ if (environment.trim() == 'development') {
 
     app.use(
         session({
-            secret: 'keyboard cat',
+            secret: process.env.TOKEN_SECRET,
             resave: false,
             saveUninitialized: true,
             cookie: {
@@ -62,7 +62,7 @@ else {
 
     app.use(
         session({
-            secret: 'keyboard cat',
+            secret: process.env.TOKEN_SECRET,
             resave: false,
             saveUninitialized: true,
             cookie: {
@@ -82,7 +82,7 @@ else {
         res.send('error:page does not exist');
     });
 
-    app.get('/test', (req, resp, next) => {
+    app.get('/frontpage', (req, resp, next) => {
         db.query(
             'SELECT * FROM items',
             (err, result) => {
