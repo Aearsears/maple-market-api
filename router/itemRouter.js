@@ -122,7 +122,7 @@ router.post('/item/pricesuggestion', (req, resp) => {
     // the check for the user having logged in is done on the nextjs by calling getServerSide props. so the user wil already be logged in to access this page and make a price suggestion
     console.log(req.body);
     db.query(
-        'INSERT INTO pricesugg(itemid, submittedon,suggested_price,userid,user) VALUES ($1, $2, $3, $4,(SELECT name FROM users WHERE user_id = $4)) ',
+        'INSERT INTO pricesugg(itemid, submittedon,updatedon,suggested_price,userid,"user") VALUES ($1, $2, $2, $3, $4,(SELECT name FROM users WHERE user_id = $4)) ',
         [
             req.body.itemId,
             req.body.submittedOn,
@@ -132,7 +132,7 @@ router.post('/item/pricesuggestion', (req, resp) => {
         (err, result) => {
             if (err) {
                 console.log(err);
-                resp.status(401);
+                resp.status(500);
                 resp.send(err.detail);
             }
             else {
