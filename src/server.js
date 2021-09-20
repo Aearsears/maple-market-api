@@ -4,6 +4,7 @@ const path = require('path');
 const bodyParser = require('body-parser');
 const passport = require('passport');
 const session = require('express-session');
+const pgSession = require('connect-pg-simple')(session);
 const PORT = process.env.PORT || 4000;
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -15,7 +16,10 @@ app.set('trust proxy', 1);
 const itemRouter = require('../router/itemRouter');
 const userRouter = require('../router/userRouter');
 const corsOptions = {
-    origin: ['https://wizardly-bardeen-ddc625.netlify.app', 'http://localhost:3000'],
+    origin: [
+        'https://wizardly-bardeen-ddc625.netlify.app',
+        'http://localhost:3000'
+    ],
     optionsSuccessStatus: 200,
     credentials: true
 };
@@ -48,29 +52,36 @@ if (environment.trim() == 'development') {
     const morgan = require('morgan');
     app.use(morgan('combined'));
     app.get('/test', (req, resp) => {
-    // console.log();
+        // console.log();
         resp.sendFile(path.join(__dirname, '/../db/mockdata.json'));
     });
 
     app.get('/mesomarket', (req, resp) => {
-    // console.log();
+        // console.log();
         resp.sendFile(path.join(__dirname, '/../db/mesomarket.json'));
     });
 }
 else {
     require('./auth-passport')(passport);
-
-    app.use(
-        session({
-            secret: process.env.TOKEN_SECRET,
-            resave: false,
-            saveUninitialized: true,
-            cookie: {
-                maxAge: 1000 * 60 * 60 * 60,
-                secure: true
-            }
-        })
-    );
+    const sessionConfig = {
+        // eslint-disable-next-line new-cap
+        store: new pgSession({
+            pool: db.getPool(),
+            tableName: 'session'
+        }),
+        name: 'SID',
+        secret: process.env.TOKEN_SECRET,
+        resave: false,
+        saveUninitialized: false,
+        cookie: {
+            maxAge: 1000 * 60 * 60 * 24 * 7,
+            samesite: 'None',
+            secure: true, // ENABLE ONLY ON HTTPS
+            httpOnly: true,
+            path: '/'
+        }
+    };
+    app.use(session(sessionConfig));
     app.use(passport.initialize());
     app.use(passport.session());
     app.use('/api', itemRouter);

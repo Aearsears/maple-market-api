@@ -1,13 +1,12 @@
 const cookie = require('cookie');
 
 const TOKEN_NAME = 'auth';
-const MAX_AGE = 60 * 60 * 8 * 1000;
+const MAX_AGE = 1000 * 60 * 60 * 24 * 7;
 
 function setTokenCookie (res, token) {
     const kookie = cookie.serialize(TOKEN_NAME, token, {
         maxAge: MAX_AGE,
-        expires: new Date(Date.now() + MAX_AGE),
-        httpOnly: false,
+        httpOnly: true,
         secure: process.env.NODE_ENV === 'production',
         path: '/',
         sameSite: 'None'

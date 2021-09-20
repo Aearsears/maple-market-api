@@ -28,5 +28,6 @@ module.exports = {
             console.log('[LOG]Executed query', { text, duration });
             callback(err, res);
         });
-    }
+    },
+    getPool: () => (pool)
 };
