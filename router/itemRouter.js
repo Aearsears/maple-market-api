@@ -144,47 +144,34 @@ router.post('/item/pricesuggestion', (req, resp) => {
 });
 
 router.post('/item/:suggid/pricesuggestionvote', (req, resp) => {
-    console.log(req.body);
+    let queryString;
+    let respString;
     if (req.body.type === 'upvote') {
-        db.query(
-            'UPDATE pricesugg SET upvotes = upvotes + 1 WHERE (id = $1 AND itemid = $2)',
-            [
-                req.body.itemId,
-                req.body.suggId
-            ],
-            (err, result) => {
-                if (err) {
-                    console.log(err);
-                    resp.status(500);
-                    resp.send(err.detail);
-                }
-                else {
-                    resp.status(200);
-                    resp.send('Upvoted!');
-                }
-            }
-        );
+        queryString = 'UPDATE pricesugg SET upvotes = upvotes + 1 WHERE (id = $1 AND itemid = $2)';
+        respString = 'Upvoted!';
     }
     else if (req.body.type === 'downvote') {
-        db.query(
-            'UPDATE pricesugg SET upvotes = upvotes - 1 WHERE (id = $1 AND itemid = $2)',
-            [
-                req.body.itemId,
-                req.body.suggId
-            ],
-            (err, result) => {
-                if (err) {
-                    console.log(err);
-                    resp.status(500);
-                    resp.send(err.detail);
-                }
-                else {
-                    resp.status(200);
-                    resp.send('Downvoted!');
-                }
-            }
-        );
+        queryString = 'UPDATE pricesugg SET upvotes = upvotes - 1 WHERE (id = $1 AND itemid = $2)';
+        respString = 'Downvoted!';
     }
+    db.query(
+        queryString,
+        [
+            req.body.suggId,
+            req.body.itemId
+        ],
+        (err, result) => {
+            if (err) {
+                console.log(err);
+                resp.status(500);
+                resp.send(err.detail);
+            }
+            else {
+                resp.status(200);
+                resp.send(respString);
+            }
+        }
+    );
 });
 
 router.get('/item/:id/pricesuggestion', (req, resp, next) => {
