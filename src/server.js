@@ -15,7 +15,7 @@ app.set('trust proxy', 1);
 const itemRouter = require('../router/itemRouter');
 const userRouter = require('../router/userRouter');
 const corsOptions = {
-    origin: ['https://wizardly-bardeen-ddc625.netlify.app', 'http://localhost:3000'],
+    origin: ['https://maple-market.netlify.app'],
     optionsSuccessStatus: 200,
     credentials: true
 };
@@ -48,12 +48,12 @@ if (environment.trim() == 'development') {
     const morgan = require('morgan');
     app.use(morgan('combined'));
     app.get('/test', (req, resp) => {
-    // console.log();
+        // console.log();
         resp.sendFile(path.join(__dirname, '/../db/mockdata.json'));
     });
 
     app.get('/mesomarket', (req, resp) => {
-    // console.log();
+        // console.log();
         resp.sendFile(path.join(__dirname, '/../db/mesomarket.json'));
     });
 }
